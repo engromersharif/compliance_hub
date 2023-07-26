@@ -1,0 +1,63 @@
+{% extends "base_menu.html" %} {% load humanize %}
+<!-- https://docs.djangoproject.com/en/3.0/ref/contrib/humanize -->
+{% block head %}
+<style>
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    display: none;
+    background-color: rgba(0, 0, 0, 0.5); /*dim the background*/
+  }
+</style>
+{% endblock %} {% block content %} {% if incident.content_type %}
+<div
+  id="overlay"
+  class="overlay"
+  style="text-align: center"
+  onclick="document.getElementById('overlay').style.display = 'none';"
+>
+  <img
+    style="width: 90%; margin-top: 50px; border: 3px solid black"
+    src="{% url 'jhpl_ims:incident_picture' incident.incident_id %}"
+  />
+</div>
+{% endif %} {% if user == incident.owner %}
+<span style="float: right">
+  ({{ incident.updated_at|naturaltime }})
+
+  <a href="{% url 'jhpl_ims:incident_update' incident.incident_id %}"
+    ><i class="fa fa-pencil"></i
+  ></a>
+  <a href="{% url 'jhpl_ims:incident_delete' incident.incident_id %}"
+    ><i class="fa fa-trash"></i
+  ></a>
+</span>
+{% endif %}
+
+<h3><b>Incident Number:</b> {{ incident.incident_id }}</h3>
+<hr />
+{% if incident.content_type %}
+<img
+  style="float: right; max-width: 50%"
+  src="{% url 'jhpl_ims:incident_picture' incident.incident_id %}"
+  onclick="document.getElementById('overlay').style.display = 'block';"
+/>
+{% endif %}
+<h4><b>Reported By:</b> {{ incident.owner }}</h4>
+<h4><b>Report Date:</b> {{ incident.created_at|date }}</h4>
+<h4><b>Incident Date Time:</b> {{ incident.incident_datetime }}</h4>
+<h4><b>People Involved:</b> {{ incident.people_involved }}</h4>
+<h4><b>Incident Location:</b> {{ incident.incident_location }}</h4>
+<h4><b>Witness: </b>{{ incident.incident_witness }}</h4>
+<hr />
+<h3><b>Incident Description</b></h3>
+<p>{{incident.incident_description}}</p>
+
+<p>
+  <a href="{% url 'jhpl_ims:incident_list' %}">Go Back</a>
+</p>
+{% endblock %}

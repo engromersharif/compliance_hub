@@ -1,0 +1,31 @@
+{% extends "base_menu.html" %} {% block content %} {% load static %}
+<link rel="stylesheet" href="{% static 'css/base.css' %}" />
+<ul>
+  {% if user.is_authenticated %}
+  <li>
+    <h3>
+      <b><a href="{% url 'jhpl_ims:index' %}">JHPL IMS</a></b>
+    </h3>
+  </li>
+  <li>
+    <h3>
+      <b><a href="{% url 'jhpl_ims:incident_list' %}">Incident Reports</a></b>
+    </h3>
+  </li>
+
+  <!--<li>
+   <p><a href="">AJCL IMS</a></p> -->
+
+  <img src="{% static "images/test_photo.jpg" %}" alt=""
+  class="center_main_photo">
+  <li>
+    {% else %}
+    <p>
+      <!-- <a href="{% url 'login' %}"
+        >You are signed out. Please click here to access the content.</a
+      > -->
+    </p>
+  </li>
+</ul>
+<img src="{% static "images/quality_policy.jpg" %}" alt=""
+class="center_secondary_photo"> {% endif %} {% endblock %}

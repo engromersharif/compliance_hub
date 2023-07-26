@@ -1,0 +1,125 @@
+{% extends "base_menu.html" %} {% block content %}
+
+<title>Incident Reports</title>
+<style>
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th,
+  td {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+
+  th {
+    background-color: #f2f2f2;
+    color: black;
+  }
+
+  input {
+    margin-bottom: 10px;
+  }
+
+  back {
+  }
+</style>
+
+<h1>Incident Logs, Welcome <b>{{user.username}}</b></h1>
+
+<input
+  type="text"
+  id="searchInput"
+  onkeyup="filterFunction()"
+  placeholder="Search by location..."
+/>
+<p id="back"></p>
+
+<a href="{% url 'jhpl_ims:incident_create' %}"> Report Incidents Here </a>
+| Click on <b>Incident Number</b> To Visit Incident |
+<a href="/"> Click Here To Go Back </a>
+
+<table id="documentTable">
+  <thead>
+    <tr>
+      <th>Incident Number</th>
+      <th>Reported By</th>
+      <th>Report Date</th>
+      <th>Incident Date Time</th>
+      <th>People Involved</th>
+      <th>Incident Location</th>
+      <th>Witness</th>
+      {% if show_edit_link %}
+      <th>Admin Area</th>
+      {% endif %}
+    </tr>
+  </thead>
+  <tbody>
+    <!-- Sample row: you will need to add more rows and data -->
+    {% for incident in incident_list %} {% if show_edit_link %}
+
+    <tr>
+      <td>
+        <a href="{% url 'jhpl_ims:incident_detail' incident.incident_id %}"
+          >{{incident.incident_id}}</a
+        >
+      </td>
+      <td>{{incident.owner}}</td>
+      <td>{{incident.created_at}}</td>
+      <td>{{incident.incident_datetime}}</td>
+      <td>{{incident.people_involved}}</td>
+      <td>{{incident.incident_location}}</td>
+      <td>{{incident.incident_witness}}</td>
+
+      <td>
+        <a href="{% url 'jhpl_ims:incident_delete' incident.incident_id %}"
+          >Delete</a
+        >
+      </td>
+    </tr>
+
+    {% elif user == incident.owner %}
+
+    <tr>
+      <td>
+        <a href="{% url 'jhpl_ims:incident_detail' incident.incident_id %}"
+          >{{incident.incident_id}}</a
+        >
+      </td>
+      <td>{{incident.owner}}</td>
+      <td>{{incident.created_at}}</td>
+      <td>{{incident.incident_datetime}}</td>
+      <td>{{incident.people_involved}}</td>
+      <td>{{incident.incident_location}}</td>
+      <td>{{incident.incident_witness}}</td>
+    </tr>
+
+    {% else %}
+    <td>No Data</td>
+    {% endif %} {% endfor %}
+  </tbody>
+</table>
+
+<script>
+  function filterFunction() {
+    let input, filter, table, tr, td, i, txtValue;
+    input = document.getElementById("searchInput");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("documentTable");
+    tr = table.getElementsByTagName("tr");
+    for (i = 0; i < tr.length; i++) {
+      td = tr[i].getElementsByTagName("td")[5]; // Change index as needed
+      if (td) {
+        txtValue = td.textContent || td.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+      }
+    }
+  }
+</script>
+
+{% endblock %}

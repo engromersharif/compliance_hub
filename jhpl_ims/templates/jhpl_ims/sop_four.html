@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+{% extends "base_menu.html" %} {% load crispy_forms_tags %}
+{% load humanize %} 
+{% block content %}
+
+<style>
+  .header {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    background: linear-gradient(
+      90deg,
+      #005f73 0%,
+      #3c6997 25%,
+      #a5c7b9 50%,
+      #184e77 75%,
+      #1f7a8c 100%
+    );
+    color: white;
+    border-bottom: 1px solid #ddd;
+  }
+  .header-item {
+    flex: 1;
+    margin-right: 20px;
+  }
+  .header-item:last-child {
+    margin-right: 0;
+  }
+</style>
+
+{% if master_list %} {% for master in master_list %}
+<header class="header">
+  <div class="header-item">
+    <p><b>Document Number:</b> {{master.doc_num}} <span id="docNo"></span></p>
+    <p><b>Issue Date:</b> {{master.issue_date}} <span id="issueDate"></span></p>
+    <p><b>Status:</b> {{master.status}} <span id="issueDate"></span></p>
+  </div>
+  <div class="header-item">
+    <p><b>Revision No: </b>{{master.rev_num}}<span id="revNo"></span></p>
+    <p><b>Controlled Copy No:</b> {{master.control_copy_num}} <span id="controlCopyNo"></span></p>
+  </div>
+  <div class="header-item">
+    <p><b>Approval</b></p>
+    <p><b>Name:</b> {{master.approved_by}} <span id="approvedBy"></span></p>
+    <p><b>Date:</b> {{master.approved_date}} <span id="approvalDate"></span></p>
+  </div>
+  <div class="header-item">
+    <p><b>Review</b></p>
+    <p><b>Name: </b> {{master.reviewed_by}} <span id="reviewedBy"></span></p>
+    <p><b> Date: </b> {{master.reviewed_date}} <span id="reviewDate"></span></p>
+  </div>
+</header>
+
+<main>
+  <h2><b>{{ master.doc_title }}</b></h2>
+
+  <h3>This is our {{master.ims_masterlist_id}}th procedure</h3>
+
+  <p id="docContent"></p>
+</main>
+
+
+<p><a href="{% url 'jhpl_ims:index' %}">Go Back</a></p>
+
+{% if user.is_authenticated %}
+
+<p id="back"> You are logged in as <b>{{user.username}} </b>
+<br clear="all"/>
+<form method="post" action="{% url 'jhpl_ims:comment_create' master.ims_masterlist_id %}">
+    {% csrf_token %}
+    {{ comment_form|crispy }}
+<input type="submit" value="Submit">
+<input type="submit" value="Cancel" onclick="window.location.href='{% url 'jhpl_ims:procedures' master.ims_masterlist_id %}';return false;">
+</form>
+</p>
+{% endif %}
+
+
+<h4><b>Notes: </b></h4>
+<hr />
+{% if notes_list%}
+{% for comment in notes_list %}
+<p><b>Owner: </b>{{comment.owner}} | {{comment.updated_at|naturaltime}}</p>
+<p><b>Comments: </b>{{comment.large_text_body}}
+{% if user == comment.owner %}
+<a href="{% url 'jhpl_ims:comment_delete' comment.notes_id %}"><i class="fa fa-trash"></i></a>
+</p>
+{% endif %}
+<hr />
+{% endfor %}
+{% endif %}
+</p>
+
+{% endfor %}
+{% endif %}
+
+{% endblock %}

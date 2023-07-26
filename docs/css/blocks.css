@@ -1,0 +1,46 @@
+body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+#one {
+position: fixed;
+bottom:10px;
+right:10px;
+width: 25%;
+border: 3px solid #3234a8;
+}
+
+#two {
+position: fixed;
+top: 10px;
+right:10px;
+width: 25%;
+border: 3px solid #32a846;
+}
+
+#three {
+position: fixed;
+top: 10px;
+left:10px;
+width: 25%;
+border: 3px solid #ffa500;
+}
+
+#four {
+position: fixed;
+bottom:10px;
+left:10px;
+width: 25%;
+border: 3px solid #ffff00;
+}
+
+#link {
+text-align: center;
+top: 10px;
+}
+
+a[href] {
+  color: #ffffff;
+  background-color: #2f418e;
+  text-decoration: none;
+}

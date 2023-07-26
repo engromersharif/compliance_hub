@@ -1,0 +1,18 @@
+{% extends "base_menu.html" %} {% block content %}
+
+<h1>Delete Comment</h1>
+
+<p>Are you sure you want to delete</p>
+<p>{{notes}}</p>
+
+<form action="" method="POST">
+  {% csrf_token %}
+  <input type="submit" class="btn btn-primary" value="Yes, delete." />
+  <a
+    href="{% url 'jhpl_ims:procedures' notes.jhpl_ims_masterlist_key.ims_masterlist_id %}"
+    class="btn btn-secondary"
+    >Cancel</a
+  >
+</form>
+
+{% endblock %}
